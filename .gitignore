@@ -48,6 +48,7 @@ fabric.properties
 target/
 pom.xml.tag
 /src/main/resources/docker-java.properties
+/src/main/resources/keystore.jks
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next

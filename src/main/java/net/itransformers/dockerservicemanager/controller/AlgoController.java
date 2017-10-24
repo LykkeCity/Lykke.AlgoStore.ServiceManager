@@ -29,9 +29,9 @@ public class AlgoController {
     AlgoContainerManager algoContainerManager;
 
 
-    @RequestMapping(value = "/build", method= RequestMethod.POST)
+    @RequestMapping(value = "/build", method= RequestMethod.POST, consumes = "text/plain")
 
-    public String buildAlgoImage(@RequestBody String appCode, @RequestParam String algoType, @RequestParam String algoUser,@RequestParam String algoName,@RequestParam String algoVersion){
+    public String buildAlgoImage(@RequestBody String appCode, @RequestParam AlgoType algoType, @RequestParam String algoUser,@RequestParam String algoName,@RequestParam String algoVersion){
 
         String algoUserDirName = algoUser+"-"+algoName+"-"+algoVersion;
         File baseDirectory = new File("/tmp"+File.separator+algoUserDirName);
@@ -52,7 +52,7 @@ public class AlgoController {
         }
 
         File appFile = null;
-        if (algoType.equals(AlgoType.Java.toString())){
+        if (algoType.toString().equals(AlgoType.Java.toString())){
             try {
                 appFile = new File(baseDirectory,"Main.java");
                 appFile.createNewFile();

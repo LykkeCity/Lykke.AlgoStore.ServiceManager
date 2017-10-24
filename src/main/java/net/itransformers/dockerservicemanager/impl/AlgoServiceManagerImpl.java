@@ -1,6 +1,6 @@
 package net.itransformers.dockerservicemanager.impl;
 
-import net.itransformers.dockerservicemanager.api.DockerServiceManager;
+import net.itransformers.dockerservicemanager.api.AlgoServiceManager;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class DockerServiceManagerImpl implements DockerServiceManager {
+public class AlgoServiceManagerImpl implements AlgoServiceManager {
 }

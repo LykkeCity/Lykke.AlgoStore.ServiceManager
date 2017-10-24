@@ -47,6 +47,7 @@ fabric.properties
 ### Maven template
 target/
 pom.xml.tag
+/src/main/resources/docker-java.properties
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next

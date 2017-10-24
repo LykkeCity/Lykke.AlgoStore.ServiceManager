@@ -2,7 +2,6 @@ package net.itransformers.dockerservicemanager.impl;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import net.itransformers.dockerservicemanager.api.AlgoContainerManager;
@@ -30,20 +29,10 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
             .withEnv(String.format("appKey==%s", appKey))
             .exec();
 
-        InspectContainerResponse inspectContainerResponse = dockerClient.inspectContainerCmd(container.getId()).exec();
+      //  InspectContainerResponse inspectContainerResponse = dockerClient.inspectContainerCmd(container.getId()).exec();
 
+        return container.getId();
 
-
-        if (inspectContainerResponse.getState().getRunning()){
-            return container.getId();
-
-        } else if (inspectContainerResponse.getState().getDead()){
-
-            throw new RuntimeException("Can't run algo with "+imageId +"!!!");
-
-        }
-
-        return null;
     }
 
 
@@ -103,7 +92,7 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
     @Override
     public void start(String id) {
 
-        dockerClient.startContainerCmd(id).exec();
+        dockerClient.startContainerCmd(id).withContainerId(id).exec();
 
 
     }

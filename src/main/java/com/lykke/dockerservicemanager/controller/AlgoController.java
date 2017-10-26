@@ -77,16 +77,44 @@ public class AlgoController {
 
     }
 
-    @RequestMapping(value = "/test", method= RequestMethod.PUT)
+    @RequestMapping(value = "/test/create", method= RequestMethod.PUT)
 
     public String testAlgo(@RequestParam String imageId,@RequestParam String name, @RequestParam String appKey){
         String containerId = algoContainerManager.create(imageId,name, appKey);
-        algoContainerManager.start(containerId);
         return containerId;
 
     }
 
-    @RequestMapping(value = "/getLog/{id}", method= RequestMethod.GET)
+
+    @RequestMapping(value = "/test/{id}/start", method= RequestMethod.PUT)
+
+    public void start(@PathVariable String id){
+        algoContainerManager.start(id);
+
+    }
+
+    @RequestMapping(value = "/test/{id}/pause", method= RequestMethod.PUT)
+
+    public void pauseTestAlgo(@PathVariable String id){
+         algoContainerManager.pause(id);
+
+    }
+
+    @RequestMapping(value = "/test/{id}/resume", method= RequestMethod.PUT)
+
+    public void resumeTestAlgo(@PathVariable String id){
+        algoContainerManager.resume(id);
+
+    }
+
+    @RequestMapping(value = "/test/{id}/stop", method= RequestMethod.PUT)
+
+    public void stopTestAlgo(@RequestParam String id){
+        algoContainerManager.stop(id);
+
+    }
+
+    @RequestMapping(value = "/test/{id}/getLog", method= RequestMethod.GET)
 
     public String getAlgoLog(String id){
 

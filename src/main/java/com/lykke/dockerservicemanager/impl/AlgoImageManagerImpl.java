@@ -9,6 +9,8 @@ import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.github.dockerjava.core.command.PushImageResultCallback;
 import com.lykke.dockerservicemanager.api.AlgoImageManager;
+import com.lykke.dockerservicemanager.exception.AlgoException;
+import com.lykke.dockerservicemanager.exception.AlgoServiceManagerErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,53 +31,73 @@ public class AlgoImageManagerImpl implements AlgoImageManager {
     DockerClient dockerClient;
 
     @Override
-    public String build(File dockerBaseDirPath, File dockerFilePath) {
+    public String build(File dockerBaseDirPath, File dockerFilePath) throws  AlgoException{
 
         logger.debug("Building an image in + "+dockerBaseDirPath.getAbsolutePath()+ " with Dockerfile "+dockerFilePath.getAbsolutePath()+ "!");
-        BuildImageResultCallback callback = new BuildImageResultCallback() {
-            @Override
-            public void onNext(BuildResponseItem item) {
-                logger.debug("id:" + item.getId()  +" status: "+item.getStatus());
-                super.onNext(item);
-            }
-            @Override
-            public void onComplete() {
-                logger.debug("completed!");
-                super.onComplete();
-            }
-        };
-        String imageId = dockerClient.buildImageCmd(dockerBaseDirPath).withDockerfile(dockerFilePath).exec(callback).awaitImageId();
+            BuildImageResultCallback callback = new BuildImageResultCallback() {
+                @Override
+                public void onNext(BuildResponseItem item) {
+                    logger.debug("id:" + item.getId() + " status: " + item.getStatus());
+                    super.onNext(item);
+                }
 
+                @Override
+                public void onComplete() {
+                    logger.debug("completed!");
+                    super.onComplete();
+                }
+            };
+        try {
 
-        return imageId;
+            return dockerClient.buildImageCmd(dockerBaseDirPath).withDockerfile(dockerFilePath).exec(callback).awaitImageId();
+
+        }catch (RuntimeException e){
+           if (e.getMessage().contains("javac")){
+               throw new AlgoException("Can't compile your code!!!", e, AlgoServiceManagerErrorCode.ALGO_COMPILATION_ERROR);
+
+           }  else {
+               throw new AlgoException(e.getMessage(), e, AlgoServiceManagerErrorCode.ALGO_CREATION_ERROR);
+           }
+        }
+
     }
 
     @Override
     public void pull(String repo, String tag) {
         logger.debug("Pulling an image from a repo: "+ repo+"with tag " +tag +"!");
 
-        PullImageResultCallback callback = new PullImageResultCallback() {
+            PullImageResultCallback callback = new PullImageResultCallback() {
 
-            @Override
-            public void onNext(PullResponseItem item) {
-                logger.debug("id:" + item.getId()  +" status: "+item.getStatus());
-                super.onNext(item);
-            }
-            @Override
-            public void onComplete() {
-                logger.debug("completed!");
-                super.onComplete();
-            }
+                @Override
+                public void onNext(PullResponseItem item) {
+                    logger.debug("id:" + item.getId() + " status: " + item.getStatus());
+                    super.onNext(item);
+                }
 
-        };
+                @Override
+                public void onComplete() {
+                    logger.debug("completed!");
+                    super.onComplete();
+                }
 
-        dockerClient.pullImageCmd(repo).exec(callback).awaitSuccess();
+            };
+        try {
+
+            dockerClient.pullImageCmd(repo).exec(callback).awaitSuccess();
+        }catch (RuntimeException e){
+            throw new AlgoException(e.getMessage(), e, AlgoServiceManagerErrorCode.ALGO_PULL_ERROR);
+
+        }
     }
 
     @Override
     public void tag(String image, String repo, String tag) {
+        try {
 
-        dockerClient.tagImageCmd(image,repo,tag).exec();
+            dockerClient.tagImageCmd(image, repo, tag).exec();
+        }catch (RuntimeException e){
+            throw new AlgoException(e.getMessage(),e,AlgoServiceManagerErrorCode.ALGO_TAG_ERROR);
+        }
 
 
     }
@@ -97,8 +119,8 @@ public class AlgoImageManagerImpl implements AlgoImageManager {
         };
         try {
             dockerClient.pushImageCmd(image).withName(repo).withTag(tag).exec(callback).awaitCompletion(5, TimeUnit.MINUTES.MINUTES);
-        } catch (InterruptedException e) {
-            logger.error("Pull failed with",e);
+        } catch (Exception e) {
+            throw new AlgoException(e.getMessage(),e,AlgoServiceManagerErrorCode.ALGO_SAVE_ERROR);
         }
     }
 

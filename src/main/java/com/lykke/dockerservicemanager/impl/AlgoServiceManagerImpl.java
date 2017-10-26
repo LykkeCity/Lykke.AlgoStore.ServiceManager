@@ -1,6 +1,6 @@
-package net.itransformers.dockerservicemanager.impl;
+package com.lykke.dockerservicemanager.impl;
 
-import net.itransformers.dockerservicemanager.api.AlgoServiceManager;
+import com.lykke.dockerservicemanager.api.AlgoServiceManager;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,10 +1,10 @@
-package net.itransformers.dockerservicemanager.impl;
+package com.lykke.dockerservicemanager.impl;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
-import net.itransformers.dockerservicemanager.api.AlgoContainerManager;
+import com.lykke.dockerservicemanager.api.AlgoContainerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

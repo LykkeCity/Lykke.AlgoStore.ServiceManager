@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.examples;
+package com.lykke.dockerservicemanager.examples;
 
 public class Main {
 

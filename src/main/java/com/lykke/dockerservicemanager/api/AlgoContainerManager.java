@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.api;
+package com.lykke.dockerservicemanager.api;
 
 /**
  * Created by niau on 10/23/17.

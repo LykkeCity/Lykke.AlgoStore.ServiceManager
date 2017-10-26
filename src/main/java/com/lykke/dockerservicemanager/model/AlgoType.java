@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.model;
+package com.lykke.dockerservicemanager.model;
 
 /**
  * Created by niau on 10/22/17.

@@ -1,8 +1,8 @@
-package net.itransformers.dockerservicemanager.controller;
+package com.lykke.dockerservicemanager.controller;
 
-import net.itransformers.dockerservicemanager.api.AlgoContainerManager;
-import net.itransformers.dockerservicemanager.api.AlgoImageManager;
-import net.itransformers.dockerservicemanager.model.AlgoType;
+import com.lykke.dockerservicemanager.api.AlgoContainerManager;
+import com.lykke.dockerservicemanager.api.AlgoImageManager;
+import com.lykke.dockerservicemanager.model.AlgoType;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

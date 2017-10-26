@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.api;
+package com.lykke.dockerservicemanager.api;
 
 import com.github.dockerjava.api.model.Image;
 

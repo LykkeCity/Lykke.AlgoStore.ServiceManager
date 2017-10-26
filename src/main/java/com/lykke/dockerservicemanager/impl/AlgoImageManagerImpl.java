@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.impl;
+package com.lykke.dockerservicemanager.impl;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.BuildResponseItem;
@@ -8,7 +8,7 @@ import com.github.dockerjava.api.model.PushResponseItem;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.github.dockerjava.core.command.PushImageResultCallback;
-import net.itransformers.dockerservicemanager.api.AlgoImageManager;
+import com.lykke.dockerservicemanager.api.AlgoImageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

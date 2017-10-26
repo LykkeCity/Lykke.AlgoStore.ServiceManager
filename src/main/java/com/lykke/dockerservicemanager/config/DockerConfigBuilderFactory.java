@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.config;
+package com.lykke.dockerservicemanager.config;
 
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;

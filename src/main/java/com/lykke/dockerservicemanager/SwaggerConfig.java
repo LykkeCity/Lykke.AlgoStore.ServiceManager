@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager;
+package com.lykke.dockerservicemanager;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

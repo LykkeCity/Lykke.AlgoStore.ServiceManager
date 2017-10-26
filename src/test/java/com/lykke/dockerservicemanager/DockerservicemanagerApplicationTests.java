@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager;
+package com.lykke.dockerservicemanager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,4 +1,4 @@
-package net.itransformers.dockerservicemanager.config;
+package com.lykke.dockerservicemanager.config;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.DockerCmdExecFactory;

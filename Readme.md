@@ -1,6 +1,3 @@
- AlgoServiceManager deployment instructions
-
-
 
 # Configure docker-java properties
 Please configure your docker host url, put your certificates in ./docker-certs and edit your credentials for the dockerhub repo 

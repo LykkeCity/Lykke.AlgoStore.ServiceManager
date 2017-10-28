@@ -55,7 +55,7 @@ If you want to enable also user/password authentication
 ```
 <dependency>
 		<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+		<artifactId>spring-boot-starter-security</artifactId>
 </dependency>
 ```
 ## mvn clean package

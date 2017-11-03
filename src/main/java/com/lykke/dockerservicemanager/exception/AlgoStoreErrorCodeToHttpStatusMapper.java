@@ -21,16 +21,11 @@ public class AlgoStoreErrorCodeToHttpStatusMapper {
         errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.ALGO_PULL_ERROR,HttpStatus.BAD_REQUEST);
         errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.ALGO_SAVE_ERROR,HttpStatus.BAD_REQUEST);
         errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.ALGO_SERVICE_START_ERROR,HttpStatus.INTERNAL_SERVER_ERROR);
-
         errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.ALGO_TAG_ERROR,HttpStatus.BAD_REQUEST);
-
         errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.ALGO_TEST_ERROR,HttpStatus.NOT_ACCEPTABLE);
+        errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.ALGO_TEST_ERROR,HttpStatus.NOT_FOUND);
+
         errorCodeHttpStatusMap.put(AlgoServiceManagerErrorCode.INTERNAL_ERROR,HttpStatus.INTERNAL_SERVER_ERROR);
-
-
-
-
-
     }
     public org.springframework.http.HttpStatus getHttpStatusFor(AlgoErrorCode algoErrorCode){
         HttpStatus httpStatus = errorCodeHttpStatusMap.get(algoErrorCode);

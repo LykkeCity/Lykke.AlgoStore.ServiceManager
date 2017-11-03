@@ -2,14 +2,19 @@ package com.lykke.dockerservicemanager.impl;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.lykke.dockerservicemanager.api.AlgoContainerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +26,8 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
 
     @Autowired
     DockerClient dockerClient;
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     @Override
     public String create(String imageId, String name, String appKey){
@@ -98,6 +105,12 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
     }
 
     @Override
+    public void delete(String id) {
+        dockerClient.removeContainerCmd(id);
+
+    }
+
+    @Override
     public void pause(String id) {
         dockerClient.pauseContainerCmd(id).exec();
 
@@ -112,9 +125,19 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
 
     @Override
     public String getStatus(String id) {
-        //TODO Get container current status
-       // dockerClient
+
+        Map<String,String> filter = new HashMap<>();
+        filter.put("id",id);
+        List<Container> containers2 = dockerClient.listContainersCmd().withShowAll(true).exec();
+
+        for (Container container : containers2) {
+            //TODO make it more robust by comparing only the first 20 symbols
+            if (container.getId().contains(id)){
+                return container.getStatus();
+            }
+        }
         return null;
+
     }
 
 

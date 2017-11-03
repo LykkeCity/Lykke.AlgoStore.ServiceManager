@@ -10,6 +10,8 @@ public interface AlgoContainerManager {
     void start(String id);
     void pause(String id);
     void resume(String id);
+
+    void delete(String id);
     String getStatus(String id);
 
 

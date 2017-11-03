@@ -1,0 +1,13 @@
+server.port=8443
+server.ssl.key-store=keystore.jks
+server.ssl.key-store-password=kuchogon
+server.ssl.key-password=kuchogon
+spring.http.multipart.max-file-size=128MB
+spring.http.multipart.max-request-size=128MB
+info.app.name=@project.artifactId@
+info.app.description=This is AlgoStore Service Manager
+info.app.version=@project.version@
+info.build.timestamp=@maven.build.timestamp@
+info.revision.commit.id=@git.commit.id@
+info.revision.commit.message.short=@git.commit.message.short@
+info.revision.commit.time=@git.commit.time@

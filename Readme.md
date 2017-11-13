@@ -29,6 +29,43 @@ server.ssl.key-store-password=yourKeyStorePass
 server.ssl.key-password=your SSL certificate key pass
 ```
 
+#Create postgresql database 
+```
+createdb -h localhost -p 5432 -U postgres algostoremanager
+CREATE ROLE algostore LOGIN PASSWORD 'my_password';
+GRANT ALL PRIVILEGES ON database algostoremanager TO algostore;
+```
+
+#Update your application properties with:
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/algostoremanager
+spring.datasource.username=algostore
+spring.datasource.password=algopass321!
+spring.datasource.platform=POSTGRESQL
+
+spring.datasource.initialize=true
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+```
+
+Note that initially to create the database schema you should set
+```
+spring.jpa.hibernate.ddl-auto=create
+```
+If you wish to update the schema do:
+```
+spring.jpa.hibernate.ddl-auto=update
+```
+For production use
+```
+spring.jpa.hibernate.ddl-auto=validate
+```
+ 
+ 
+ 
+ 
+
 # Run
 You can run your code through the maven spring boot plugin
 ```

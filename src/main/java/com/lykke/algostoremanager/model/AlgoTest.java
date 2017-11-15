@@ -1,5 +1,7 @@
 package com.lykke.algostoremanager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 /**
@@ -27,6 +29,7 @@ public class AlgoTest {
     private String status;
 
     @OneToOne(optional = false)
+    @JsonBackReference
     private Algo algo;
 
 

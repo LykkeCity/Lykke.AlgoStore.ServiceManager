@@ -141,7 +141,11 @@ public class AlgoImageManagerImpl implements AlgoImageManager {
 
     @Override
     public void remove(String image) {
-        dockerClient.removeImageCmd(image).exec();
+        try {
+            dockerClient.removeImageCmd(image).exec();
+        }catch (com.github.dockerjava.api.exception.ConflictException ex){
+            logger.error("Can't delete algo image", ex);
 
+        }
     }
 }

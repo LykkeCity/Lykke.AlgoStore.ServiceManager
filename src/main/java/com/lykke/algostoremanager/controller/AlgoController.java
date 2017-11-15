@@ -80,8 +80,8 @@ public class AlgoController {
               algoTestRepository.delete(algoTest);
            }
            algoImageManager.remove(algo.getAlgoBuildImageId());
-
            algoRepository.delete(algo);
+
         } else {
             throw new AlgoException("Algo not found!!!", AlgoServiceManagerErrorCode.ALGO_TEST_ERROR);
 

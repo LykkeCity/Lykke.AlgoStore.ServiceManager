@@ -1,5 +1,7 @@
 package com.lykke.algostoremanager.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -23,6 +25,7 @@ public class AlgoUser {
     private String userName;
 
     @OneToMany(mappedBy = "algoUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private Collection<Algo> algos;
 
     protected AlgoUser() {

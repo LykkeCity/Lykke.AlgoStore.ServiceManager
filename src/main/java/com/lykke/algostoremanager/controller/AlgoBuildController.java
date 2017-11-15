@@ -21,6 +21,8 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/algo/build")
+@CrossOrigin(origins = "http://localhost:4200")
+
 
 public class AlgoBuildController {
     private Logger logger = LoggerFactory.getLogger(getClass());

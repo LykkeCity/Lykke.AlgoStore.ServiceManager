@@ -76,14 +76,14 @@ public class AlgoServiceManagerImpl implements AlgoServiceManager {
     }
 
     @Override
-    public String createService(String id, String name, String appKey) {
+    public String createService(String algoId, String name, String appKey) {
 
         ServiceSpec serviceSpec = new ServiceSpec();
         Map<String,String> labels = new HashMap<String,String>();
 
         labels.put("owner","algostoremanager");
         labels.put("name", name);
-        ContainerSpec containerSpec = new ContainerSpec().withImage(id).withLabels(labels);
+        ContainerSpec containerSpec = new ContainerSpec().withImage(algoId).withLabels(labels);
 
         TaskSpec taskSpec = new TaskSpec().withContainerSpec(containerSpec);
 

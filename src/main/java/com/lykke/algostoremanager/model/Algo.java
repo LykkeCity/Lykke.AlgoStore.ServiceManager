@@ -1,5 +1,7 @@
 package com.lykke.algostoremanager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 
@@ -21,12 +23,15 @@ public class Algo {
     private String repo;
 
     @ManyToOne(optional = false)
+    @JsonBackReference
     private AlgoUser algoUser;
 
     @OneToOne(mappedBy = "algo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonBackReference
     private AlgoTest algoTest;
 
     @OneToOne(mappedBy = "serviceAlgo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonBackReference
     private AlgoService algoService;
 
 
@@ -111,4 +116,5 @@ public class Algo {
     public void setAlgoTests(AlgoTest algoTest) {
         this.algoTest = algoTest;
     }
+
 }

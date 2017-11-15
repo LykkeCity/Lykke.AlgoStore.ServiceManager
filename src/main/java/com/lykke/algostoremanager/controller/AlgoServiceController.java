@@ -33,9 +33,9 @@ public class AlgoServiceController {
 
     @RequestMapping(value = "/create", method= RequestMethod.PUT)
 
-    public Long createAlgoService(@RequestParam Long id,@RequestParam String name, @RequestParam String appKey){
+    public Long createAlgoService(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
 
-        Algo algo = algoRepository.findById(id);
+        Algo algo = algoRepository.findById(algoId);
         AlgoService algoService = new AlgoService();
 
 
@@ -59,7 +59,7 @@ public class AlgoServiceController {
 
     @RequestMapping(value = "/{id}/delete", method= RequestMethod.POST)
 
-    public void deleteAlgoService(@RequestParam Long id){
+    public void deleteAlgoService(@PathVariable Long id){
 
         AlgoService algoService = algoServiceRepository.findById(id);
         if (algoService!=null){
@@ -77,7 +77,7 @@ public class AlgoServiceController {
     @RequestMapping(value = "/{id}/status", method= RequestMethod.GET)
 
 
-    public String getAlgoServiceStatus(@RequestParam Long id){
+    public String getAlgoServiceStatus(@PathVariable Long id){
 
         AlgoService algoService = algoServiceRepository.findById(id);
 
@@ -89,7 +89,7 @@ public class AlgoServiceController {
     //TODO does not work due to
     //https://github.com/docker-java/docker-java/pull/917
 
-    public void updateAlgoService(@RequestParam Long buildId,@RequestParam Long id){
+    public void updateAlgoService(@RequestParam Long buildId,@PathVariable Long id){
 
         AlgoService algoService = algoServiceRepository.findOne(id);
 

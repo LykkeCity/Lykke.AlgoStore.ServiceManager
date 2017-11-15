@@ -1,5 +1,7 @@
 package com.lykke.algostoremanager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 /**
@@ -27,6 +29,8 @@ public class AlgoService {
     private String status;
 
     @OneToOne(optional = false)
+    @JsonBackReference
+
     private Algo serviceAlgo;
 
     private String name;

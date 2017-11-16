@@ -6,8 +6,10 @@ import com.lykke.algostoremanager.exception.AlgoServiceManagerErrorCode;
 import com.lykke.algostoremanager.model.Algo;
 import com.lykke.algostoremanager.model.AlgoService;
 import com.lykke.algostoremanager.model.AlgoServiceStatus;
+import com.lykke.algostoremanager.model.AlgoUser;
 import com.lykke.algostoremanager.repo.AlgoRepository;
 import com.lykke.algostoremanager.repo.AlgoServiceRepository;
+import com.lykke.algostoremanager.repo.AlgoUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +33,26 @@ public class AlgoServiceController {
     @Autowired
     AlgoServiceRepository algoServiceRepository;
 
+
+    @Autowired
+    AlgoUserRepository algoUserRepository;
+
     @RequestMapping(value = "/create", method= RequestMethod.PUT)
 
-    public Long createAlgoService(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
+    public Long createAlgoService(@RequestParam Long algoVersion,@RequestParam String name,@RequestParam String userName, @RequestParam String appKey){
 
-        Algo algo = algoRepository.findById(algoId);
+        AlgoUser algoUser = algoUserRepository.findByUserName(userName);
+
+
+
+        Algo algo = algoRepository.findByNameAndAlgoUser(name, algoUser);
         AlgoService algoService = new AlgoService();
 
 
         if (algo!=null) {
 
             String repo = algo.getRepo();
-            String tag = algo.getTag();
+            String tag = algo.getName();
             algoService.setServiceAlgo(algo);
 
             String serviceId = algoServiceManager.createService(repo + ":" + tag, name, appKey);
@@ -98,7 +108,7 @@ public class AlgoServiceController {
 
             String repo = algo.getRepo();
 
-            String tag = algo.getTag();
+            String tag = algo.getName();
             algoServiceManager.updateServiceWithNewAlgoVersion(repo + ":" + tag,algoService.getName(),algoService.getServiceId());
 
             algoService.setServiceAlgo(algo);

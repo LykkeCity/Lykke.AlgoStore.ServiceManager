@@ -6,8 +6,7 @@ import com.lykke.algostoremanager.api.AlgoServiceManager;
 import com.lykke.algostoremanager.exception.AlgoException;
 import com.lykke.algostoremanager.exception.AlgoServiceManagerErrorCode;
 import com.lykke.algostoremanager.model.Algo;
-import com.lykke.algostoremanager.model.AlgoService;
-import com.lykke.algostoremanager.model.AlgoTest;
+import com.lykke.algostoremanager.model.AlgoUser;
 import com.lykke.algostoremanager.repo.AlgoRepository;
 import com.lykke.algostoremanager.repo.AlgoServiceRepository;
 import com.lykke.algostoremanager.repo.AlgoTestRepository;
@@ -15,6 +14,7 @@ import com.lykke.algostoremanager.repo.AlgoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -48,10 +48,13 @@ public class AlgoController {
 
 
 
-    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET)
+    @RequestMapping(value = "/get", method= RequestMethod.GET)
 
-    public Algo getAlgoLog(Long id){
-        Algo algo = algoRepository.findById(id);
+    public Algo getAlgoLog(@RequestParam String algoUserName,@RequestParam String algoName){
+
+        AlgoUser algoUser = algoUserRepository.findByUserName(algoUserName);
+
+        Algo algo = algoRepository.findByNameAndAlgoUser(algoName,algoUser);
 
         if (algo!=null) {
             return algo;
@@ -60,25 +63,15 @@ public class AlgoController {
 
         }
     }
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method= RequestMethod.DELETE)
 
-    public void removeALgo(Long id){
-        Algo algo = algoRepository.findById(id);
+    public void removeALgo(@RequestParam String algoUserName,@RequestParam String algoName){
+        AlgoUser algoUser = algoUserRepository.findByUserName(algoUserName);
+
+        Algo algo = algoRepository.findByNameAndAlgoUser(algoName,algoUser);
+
 
         if (algo!=null) {
-
-           AlgoService algoService =  algo.getAlgoService();
-
-            if (algoService!=null){
-                algoServiceManager.deleteService(algoService.getServiceId());
-                algoServiceRepository.delete(algoService);
-            }
-
-           AlgoTest algoTest = algo.getAlgoTest();
-           if (algoTest!=null){
-              algoContainerManager.delete(algoTest.getContainerId());
-              algoTestRepository.delete(algoTest);
-           }
            algoImageManager.remove(algo.getAlgoBuildImageId());
            algoRepository.delete(algo);
 

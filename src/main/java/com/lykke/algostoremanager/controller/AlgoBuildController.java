@@ -40,9 +40,9 @@ public class AlgoBuildController {
 
 
 
-    public Long buildAlgoImageFromSource(@RequestBody String appCode, @RequestParam String algoUserName,@RequestParam String algoName,@RequestParam String algoVersion){
+    public Long buildAlgoImageFromSource(@RequestBody String appCode, @RequestParam String algoUserName,@RequestParam String algoName){
 
-        String algoUserDirName = algoUserName+"-"+algoName+"-"+algoVersion;
+        String algoUserDirName = algoUserName+"-"+algoName;
         File baseDirectory = new File("/tmp"+File.separator+algoUserDirName);
         if (!baseDirectory.exists()){
             baseDirectory.mkdir();
@@ -51,30 +51,35 @@ public class AlgoBuildController {
         dockerFile = preareAlgoBuildEnv(baseDirectory, "Dockerfile.java");
         copySourceAlgoFile(baseDirectory, "Main.java", appCode);
         String imageId = dockerImageManager.build(baseDirectory, dockerFile);
-        String tag = generateAlgoTag(algoUserName, algoName, algoVersion);
-        String repo = "niau/algos";
 
+        String repo = "niau/algos";
         AlgoUser algoUser = algoUserRepository.findByUserName(algoUserName);
         if (algoUser==null){
-          algoUser = createNewAlgoUser(algoUserName);
+            algoUser = createNewAlgoUser(algoUserName);
         }
 
-        Algo algo = new Algo(imageId, tag,repo,algoUser);
+
+        Algo algo = new Algo(imageId, algoName,repo,algoUser);
+
+        algoRepository.save(algo);
+
+        Long algoVersion = algo.getVersion();
+
+        String tag = generateAlgoTag(algoUserName, algoName,algoVersion);
 
         dockerImageManager.tag(imageId, repo, tag);
         dockerImageManager.push(imageId, repo, tag);
 
-        algoRepository.save(algo);
 
-        return  algo.getId();
+        return  algoVersion;
 
     }
 
     @RequestMapping(value="/upload-java-binary", method=RequestMethod.POST)
-    public Long buildAlgoImageFromBinary(@RequestParam String algoUserName,@RequestParam String algoName,@RequestParam String algoVersion,
+    public Long buildAlgoImageFromBinary(@RequestParam String algoUserName,@RequestParam String algoName,
                              @RequestPart(required = true) MultipartFile file){
 
-        String algoUserDirName = algoUserName+"-"+algoName+"-"+algoVersion;
+        String algoUserDirName = algoUserName+"-"+algoName;
         File baseDirectory = new File("/tmp"+File.separator+algoUserDirName);
         if (!baseDirectory.exists()){
             baseDirectory.mkdir();
@@ -83,30 +88,32 @@ public class AlgoBuildController {
 
         dockerFile  = preareAlgoBuildEnv(baseDirectory, "Dockerfile.jar.java");
         copyBinaryAlgoFile(baseDirectory, "algo.jar", file);
-        String imageId = dockerImageManager.build(baseDirectory, dockerFile);
 
-        String tag = generateAlgoTag(algoUserName,algoName,algoVersion);
         String repo = "niau/algos";
-
         AlgoUser algoUser = algoUserRepository.findByUserName(algoUserName);
         if (algoUser==null){
             algoUser = createNewAlgoUser(algoUserName);
         }
 
-        Algo algo = new Algo();
-        System.out.println(algo.getId());
+       Algo algo = algoRepository.findByNameAndAlgoUser(algoName,algoUser);
 
-        algo.setTag(tag);
-        algo.setRepo(repo);
-        algo.setAlgoUser(algoUser);
-        algo.setAlgoBuildImageId(imageId);
+        if (algo==null){
+            algo = new Algo();
+            algo.setName(algoName);
+            algo.setAlgoUser(algoUser);
+        }
 
+        String imageId = dockerImageManager.build(baseDirectory, dockerFile);
+        String tag = generateAlgoTag(algoUserName, algoName, algo.getVersion());
 
-        algoRepository.save(algo);
         dockerImageManager.tag(imageId, repo, tag);
         dockerImageManager.push(imageId, repo, tag);
 
-        return  algo.getId();
+        algo.setAlgoBuildImageId(imageId);
+
+        algoRepository.save(algo);
+
+        return  algo.getVersion();
     }
 
     private AlgoUser createNewAlgoUser(String userName){
@@ -115,7 +122,7 @@ public class AlgoBuildController {
         return algoUser;
     }
 
-    private String generateAlgoTag(String algoUser,String algoName,String algoVersion){
+    private String generateAlgoTag(String algoUser,String algoName,Long algoVersion){
          return   algoUser+"-"+algoName+"-"+algoVersion;
     }
 

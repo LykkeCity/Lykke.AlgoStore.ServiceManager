@@ -10,6 +10,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "algo_test",
+        uniqueConstraints=
+        @UniqueConstraint(columnNames={"container_id", "algo_algo_id"}),
+
         indexes = {
                 @Index(name = "containerId", columnList = "container_id", unique = true)}
 )
@@ -32,6 +35,10 @@ public class AlgoTest {
     @JsonBackReference
     private Algo algo;
 
+
+    @ManyToOne(optional = false)
+    @JsonBackReference
+    private AlgoUser algoUser;
 
     public Long getId() {
         return id;
@@ -63,5 +70,13 @@ public class AlgoTest {
 
     public void setAlgo(Algo algo) {
         this.algo = algo;
+    }
+
+    public AlgoUser getAlgoUser() {
+        return algoUser;
+    }
+
+    public void setAlgoUser(AlgoUser algoUser) {
+        this.algoUser = algoUser;
     }
 }

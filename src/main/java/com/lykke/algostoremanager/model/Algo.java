@@ -7,8 +7,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "algo",
+        uniqueConstraints=
+        @UniqueConstraint(columnNames={"algo_user_user_id", "name","version"}),
+
         indexes = {
                 @Index(name = "algoBuildImageId", columnList = "algo_build_image_id", unique = false)}
+
 )
 
 public class Algo {
@@ -19,27 +23,25 @@ public class Algo {
 
     @Column(name="algo_build_image_id")
     private String algoBuildImageId;
-    private String tag;
+    private String name;
     private String repo;
+
+    @Version
+    private Long version;
+
 
     @ManyToOne(optional = false)
     @JsonBackReference
     private AlgoUser algoUser;
 
-    @OneToOne(mappedBy = "algo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonBackReference
-    private AlgoTest algoTest;
 
-    @OneToOne(mappedBy = "serviceAlgo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonBackReference
-    private AlgoService algoService;
 
 
     public Algo() {}
 
-    public Algo(String algoBuildImageId, String tag, String repo, AlgoUser algoUser) {
+    public Algo(String algoBuildImageId, String name, String repo, AlgoUser algoUser) {
         this.algoBuildImageId = algoBuildImageId;
-        this.tag = tag;
+        this.name = name;
         this.repo = repo;
         this.algoUser = algoUser;
     }
@@ -47,8 +49,8 @@ public class Algo {
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%d, algoBuildImageId='%s',tag='%s',repo='%s]",
-                id, algoBuildImageId,tag,repo);
+                "Customer[id=%d, algoBuildImageId='%s',name='%s',repo='%s]",
+                id, algoBuildImageId, name,repo);
     }
 
 
@@ -69,28 +71,13 @@ public class Algo {
 
     }
 
-    public AlgoTest getAlgoTest() {
-        return algoTest;
+
+    public String getName() {
+        return name;
     }
 
-    public void setAlgoTest(AlgoTest algoTest) {
-        this.algoTest = algoTest;
-    }
-
-    public AlgoService getAlgoService() {
-        return algoService;
-    }
-
-    public void setAlgoService(AlgoService algoService) {
-        this.algoService = algoService;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRepo() {
@@ -109,12 +96,14 @@ public class Algo {
         this.algoUser = algoUser;
     }
 
-    public AlgoTest getAlgoTests() {
-        return algoTest;
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
-    public void setAlgoTests(AlgoTest algoTest) {
-        this.algoTest = algoTest;
+
+    public Long getVersion() {
+        return version;
     }
+
 
 }

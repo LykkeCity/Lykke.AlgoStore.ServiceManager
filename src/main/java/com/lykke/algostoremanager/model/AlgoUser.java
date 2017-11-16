@@ -1,5 +1,6 @@
 package com.lykke.algostoremanager.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -27,6 +28,15 @@ public class AlgoUser {
     @OneToMany(mappedBy = "algoUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private Collection<Algo> algos;
+
+
+    @OneToMany(mappedBy = "algoUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private Collection<AlgoTest> algoTest;
+
+    @OneToMany(mappedBy = "algoUser", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private Collection<AlgoService> algoService;
 
     protected AlgoUser() {
     }
@@ -57,5 +67,26 @@ public class AlgoUser {
 
     public void setAlgos(Collection<Algo> algos) {
         this.algos = algos;
+    }
+
+    public Collection<AlgoService> getAlgoService() {
+        return algoService;
+    }
+
+    public void setAlgoService(Collection<AlgoService> algoService) {
+        this.algoService = algoService;
+    }
+
+    public Collection<AlgoTest> getAlgoTest() {
+        return algoTest;
+    }
+
+    public void setAlgoTest(Collection<AlgoTest> algoTest) {
+        this.algoTest = algoTest;
+    }
+
+    @Override
+    public String toString() {
+        return userName;
     }
 }

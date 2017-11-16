@@ -34,8 +34,8 @@ public class AlgoTestController {
 
     @RequestMapping(value = "/create", method= RequestMethod.PUT)
 
-    public Long testAlgo(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
-        Algo algo = algoRepository.findById(algoId);
+    public Long testAlgo(@RequestParam Long algoVersion,@RequestParam String name, @RequestParam String appKey){
+        Algo algo = algoRepository.findByNameAndVersion(name, algoVersion);
         String containerId = null;
         String containerImageId = algo.getAlgoBuildImageId();
 

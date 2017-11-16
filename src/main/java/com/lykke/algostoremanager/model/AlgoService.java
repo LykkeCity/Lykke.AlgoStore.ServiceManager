@@ -30,8 +30,13 @@ public class AlgoService {
 
     @OneToOne(optional = false)
     @JsonBackReference
-
     private Algo serviceAlgo;
+
+
+    @ManyToOne (optional = false)
+    @JsonBackReference
+    private AlgoUser algoUser;
+
 
     private String name;
 
@@ -73,5 +78,13 @@ public class AlgoService {
 
     public void setServiceAlgo(Algo serviceAlgo) {
         this.serviceAlgo = serviceAlgo;
+    }
+
+    public AlgoUser getAlgoUser() {
+        return algoUser;
+    }
+
+    public void setAlgoUser(AlgoUser algoUser) {
+        this.algoUser = algoUser;
     }
 }

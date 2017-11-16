@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "algo_test",
+
         indexes = {
                 @Index(name = "containerId", columnList = "container_id", unique = true)}
 )

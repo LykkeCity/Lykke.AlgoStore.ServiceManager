@@ -2,6 +2,7 @@ package com.lykke.algostoremanager.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+
 import javax.persistence.*;
 
 /**
@@ -30,8 +31,7 @@ public class AlgoService {
 
     @OneToOne(optional = false)
     @JsonBackReference
-
-    private Algo serviceAlgo;
+    private Algo algo;
 
     private String name;
 
@@ -67,11 +67,11 @@ public class AlgoService {
         this.status = status;
     }
 
-    public Algo getServiceAlgo() {
-        return serviceAlgo;
+    public Algo getAlgo() {
+        return algo;
     }
 
-    public void setServiceAlgo(Algo serviceAlgo) {
-        this.serviceAlgo = serviceAlgo;
+    public void setAlgo(Algo algo) {
+        this.algo = algo;
     }
 }

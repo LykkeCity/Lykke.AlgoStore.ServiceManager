@@ -7,4 +7,5 @@ public interface AlgoRepository extends CrudRepository<Algo, Long> {
 
     Algo findById(Long id);
 
+    Algo findByNameAndVersion(String name, Long version);
 }

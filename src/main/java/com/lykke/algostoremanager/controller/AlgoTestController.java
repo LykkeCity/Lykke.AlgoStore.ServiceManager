@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 /**
  * Created by cpt2nmi on 16.10.2017 г..
  */
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/algo/test")
+
+@Transactional
 
 public class AlgoTestController {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -32,9 +37,32 @@ public class AlgoTestController {
     @Autowired
     AlgoTestRepository algoTestRepository;
 
+
+    @RequestMapping(value = "/get", method= RequestMethod.GET)
+
+    public List<AlgoTest> getAll(){
+
+        List<AlgoTest> algoTestList = (List<AlgoTest>) algoTestRepository.findAll();
+
+
+        return algoTestList;
+    }
+
+    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET)
+
+    public AlgoTest get(@PathVariable Long id){
+
+        AlgoTest algoTest = algoTestRepository.findById(id);
+
+
+        return algoTest;
+    }
+
+
+
     @RequestMapping(value = "/create", method= RequestMethod.PUT)
 
-    public Long testAlgo(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
+    public AlgoTest testAlgo(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
         Algo algo = algoRepository.findById(algoId);
         String containerId = null;
         String containerImageId = algo.getAlgoBuildImageId();
@@ -51,7 +79,7 @@ public class AlgoTestController {
         } else {
             throw new AlgoException("Algo not found!!!", AlgoServiceManagerErrorCode.ALGO_NOT_FOUND);
         }
-        return algoTest.getId();
+        return algoTest;
     }
 
 
@@ -113,7 +141,7 @@ public class AlgoTestController {
 
     @RequestMapping(value = "/{id}/stop", method= RequestMethod.PUT)
 
-    public void stopTestAlgo(@RequestParam Long id){
+    public void stopTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
@@ -131,7 +159,7 @@ public class AlgoTestController {
 
     @RequestMapping(value = "/{id}/getLog", method= RequestMethod.GET)
 
-    public String getAlgoLog(@RequestParam Long id){
+    public String getAlgoLog(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
@@ -144,7 +172,7 @@ public class AlgoTestController {
 
     @RequestMapping(value = "/{id}/status", method= RequestMethod.GET)
 
-    public String getTestAlgoStatus(@RequestParam Long id){
+    public String getTestAlgoStatus(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
@@ -157,7 +185,7 @@ public class AlgoTestController {
 
     @RequestMapping(value = "/{id}/delete", method= RequestMethod.GET)
 
-    public void deleteTestAlgo(@RequestParam Long id){
+    public void deleteTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
@@ -168,6 +196,8 @@ public class AlgoTestController {
 
         }
     }
+
+
 
 
 

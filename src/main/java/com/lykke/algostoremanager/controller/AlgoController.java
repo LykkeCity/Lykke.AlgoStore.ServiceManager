@@ -13,15 +13,20 @@ import com.lykke.algostoremanager.repo.AlgoServiceRepository;
 import com.lykke.algostoremanager.repo.AlgoTestRepository;
 import com.lykke.algostoremanager.repo.AlgoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * Created by niau on 11/12/17.
  */
 @RestController
 @RequestMapping("/algo")
+@Transactional
 
 public class AlgoController {
 
@@ -48,9 +53,24 @@ public class AlgoController {
 
 
 
+
+    @RequestMapping(value = "/get", method= RequestMethod.GET)
+
+    public List<Algo> getAlgo(){
+        List<Algo> algos = (List<Algo>) algoRepository.findAll();
+
+        if (algos!=null) {
+            return algos;
+        } else {
+            throw new AlgoException("No algos found in the system!!!", AlgoServiceManagerErrorCode.ALGO_NOT_FOUND);
+
+        }
+    }
+
+
     @RequestMapping(value = "/{id}/get", method= RequestMethod.GET)
 
-    public Algo getAlgoLog(Long id){
+    public Algo getAlgo(@PathVariable Long id){
         Algo algo = algoRepository.findById(id);
 
         if (algo!=null) {
@@ -62,7 +82,7 @@ public class AlgoController {
     }
     @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
 
-    public void removeALgo(Long id){
+    public void removeALgo(@PathVariable Long id){
         Algo algo = algoRepository.findById(id);
 
         if (algo!=null) {

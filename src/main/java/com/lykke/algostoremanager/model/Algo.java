@@ -1,45 +1,55 @@
 package com.lykke.algostoremanager.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import javax.persistence.*;
 
 
 @Entity
 @Table(name = "algo",
+
+
         indexes = {
                 @Index(name = "algoBuildImageId", columnList = "algo_build_image_id", unique = false)}
+
 )
 
 public class Algo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonSerialize(using=ToStringSerializer.class)
     @Column(name="algo_id")
     private Long id;
 
     @Column(name="algo_build_image_id")
     private String algoBuildImageId;
-    private String tag;
+    private String name;
     private String repo;
 
+    @Version
+    private Long version;
+
+
     @ManyToOne(optional = false)
-    @JsonBackReference
+    @JsonManagedReference
     private AlgoUser algoUser;
 
-    @OneToOne(mappedBy = "algo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonBackReference
+    @OneToOne(mappedBy = "algo", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private AlgoTest algoTest;
 
-    @OneToOne(mappedBy = "serviceAlgo", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JsonBackReference
+    @OneToOne(mappedBy = "algo", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private AlgoService algoService;
+
+
 
 
     public Algo() {}
 
-    public Algo(String algoBuildImageId, String tag, String repo, AlgoUser algoUser) {
+    public Algo(String algoBuildImageId, String name, String repo, AlgoUser algoUser) {
         this.algoBuildImageId = algoBuildImageId;
-        this.tag = tag;
+        this.name = name;
         this.repo = repo;
         this.algoUser = algoUser;
     }
@@ -47,8 +57,8 @@ public class Algo {
     @Override
     public String toString() {
         return String.format(
-                "Customer[id=%d, algoBuildImageId='%s',tag='%s',repo='%s]",
-                id, algoBuildImageId,tag,repo);
+                "Customer[id=%d, algoBuildImageId='%s',name='%s',repo='%s]",
+                id, algoBuildImageId, name,repo);
     }
 
 
@@ -85,12 +95,12 @@ public class Algo {
         this.algoService = algoService;
     }
 
-    public String getTag() {
-        return tag;
+    public String getName() {
+        return name;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRepo() {
@@ -109,12 +119,12 @@ public class Algo {
         this.algoUser = algoUser;
     }
 
-    public AlgoTest getAlgoTests() {
-        return algoTest;
+
+    public Long getVersion() {
+        return version;
     }
 
-    public void setAlgoTests(AlgoTest algoTest) {
-        this.algoTest = algoTest;
-    }
+
+
 
 }

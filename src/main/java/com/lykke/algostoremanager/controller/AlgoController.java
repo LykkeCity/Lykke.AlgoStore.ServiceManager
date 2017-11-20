@@ -13,10 +13,7 @@ import com.lykke.algostoremanager.repo.AlgoServiceRepository;
 import com.lykke.algostoremanager.repo.AlgoTestRepository;
 import com.lykke.algostoremanager.repo.AlgoUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -27,6 +24,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/algo")
 @Transactional
+
+@CrossOrigin(origins = "http://localhost:4200")
 
 public class AlgoController {
 

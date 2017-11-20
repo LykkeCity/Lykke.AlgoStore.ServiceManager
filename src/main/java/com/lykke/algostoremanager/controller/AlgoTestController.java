@@ -26,6 +26,8 @@ import java.util.List;
 
 @Transactional
 
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class AlgoTestController {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -183,7 +185,7 @@ public class AlgoTestController {
         }
     }
 
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
 
     public void deleteTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);

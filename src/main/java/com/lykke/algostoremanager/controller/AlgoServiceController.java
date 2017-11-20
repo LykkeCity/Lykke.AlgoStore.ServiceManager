@@ -23,6 +23,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/algo/service")
 @Transactional
+@CrossOrigin(origins = "http://localhost:4200")
+
+
 public class AlgoServiceController {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -59,7 +62,7 @@ public class AlgoServiceController {
         return algoService;
     }
 
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.POST)
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
 
     public void deleteAlgoService(@PathVariable Long id){
 

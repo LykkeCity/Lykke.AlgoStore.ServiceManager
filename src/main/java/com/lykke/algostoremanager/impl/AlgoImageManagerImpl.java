@@ -32,27 +32,34 @@ public class AlgoImageManagerImpl implements AlgoImageManager {
 
     @Override
     public String build(File dockerBaseDirPath, File dockerFilePath) throws  AlgoException{
+        try {
 
-        logger.debug("Building an image in + "+dockerBaseDirPath.getAbsolutePath()+ " with Dockerfile "+dockerFilePath.getAbsolutePath()+ "!");
+            logger.debug("Building an image in + "+dockerBaseDirPath.getAbsolutePath()+ " with Dockerfile "+dockerFilePath.getAbsolutePath()+ "!");
             BuildImageResultCallback callback = new BuildImageResultCallback() {
                 @Override
                 public void onNext(BuildResponseItem item) {
-                    logger.debug("id:" + item.getId() + " status: " + item.getStatus());
+//                    logger.debug("id:" + item.getId() + " status: " + item.getStatus());
                     super.onNext(item);
                 }
 
                 @Override
                 public void onComplete() {
-                    logger.debug("completed!");
                     super.onComplete();
                 }
+
             };
-        try {
 
 
-            return dockerClient.buildImageCmd(dockerBaseDirPath).withDockerfile(dockerFilePath).exec(callback).awaitImageId();
+                return dockerClient.buildImageCmd(dockerBaseDirPath).exec(callback).awaitImageId();
 
         }catch (RuntimeException e){
+            if (e.getMessage()==null){
+
+                logger.error("Can't build and algo",e);
+                throw new AlgoException("Can't build your algo!!!", e,AlgoServiceManagerErrorCode.INTERNAL_ERROR);
+
+
+            }
            if (e.getMessage().contains("javac")){
                throw new AlgoException("Can't compile your code!!!", e, AlgoServiceManagerErrorCode.ALGO_COMPILATION_ERROR);
 

@@ -30,10 +30,9 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
 
 
     @Override
-    public String create(String imageId, String name, String appKey){
+    public String create(String imageId, String name){
     CreateContainerResponse container = dockerClient.createContainerCmd(imageId)
             .withName(name)
-            .withEnv(String.format("appKey==%s", appKey))
             .exec();
 
       //  InspectContainerResponse inspectContainerResponse = dockerClient.inspectContainerCmd(container.getId()).exec();

@@ -25,6 +25,7 @@ import java.util.List;
 @RequestMapping("/algo")
 @Transactional
 
+
 @CrossOrigin(origins = "http://localhost:4200")
 
 public class AlgoController {

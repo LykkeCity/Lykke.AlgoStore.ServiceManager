@@ -34,8 +34,8 @@ public class AlgoManager {
 	@Bean
 	public DockerCmdExecFactory createDockerCmdExecFactory (){
 		DockerCmdExecFactory dockerCmdExecFactory = new JerseyDockerCmdExecFactory()
-					.withReadTimeout(10000)
-				.withConnectTimeout(10000)
+					.withReadTimeout(40000)
+				.withConnectTimeout(40000)
 				.withMaxTotalConnections(100)
 				.withMaxPerRouteConnections(10);
 		return dockerCmdExecFactory;

@@ -64,7 +64,7 @@ public class AlgoTestController {
 
     @RequestMapping(value = "/create", method= RequestMethod.PUT)
 
-    public AlgoTest testAlgo(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
+    public AlgoTest testAlgo(@RequestParam Long algoId,@RequestParam String name){
         Algo algo = algoRepository.findById(algoId);
         String containerId = null;
         String containerImageId = algo.getAlgoBuildImageId();
@@ -75,7 +75,7 @@ public class AlgoTestController {
 
 
         if (algo!=null) {
-            containerId = algoContainerManager.create(containerImageId, name, appKey);
+            containerId = algoContainerManager.create(containerImageId, name);
             algoTest.setContainerId(containerId);
             algoTestRepository.save(algoTest);
         } else {

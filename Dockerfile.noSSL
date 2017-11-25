@@ -7,5 +7,5 @@ COPY target/algostoremanager-0.0.1-SNAPSHOT.jar /usr/src/algo/algomanager.jar
 COPY Dockerfile.java     /usr/src/algo/
 COPY Dockerfile.jar.java     /usr/src/algo/
 WORKDIR /usr/src/algo/
-EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","algomanager.jar"]
+EXPOSE 8080 4000
+ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=4000 -Djava.security.egd=file:/dev/./urandom","-jar","algomanager.jar"]

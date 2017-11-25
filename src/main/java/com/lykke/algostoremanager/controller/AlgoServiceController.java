@@ -39,7 +39,7 @@ public class AlgoServiceController {
 
     @RequestMapping(value = "/create", method= RequestMethod.PUT)
 
-    public AlgoService createAlgoService(@RequestParam Long algoId,@RequestParam String name, @RequestParam String appKey){
+    public AlgoService createAlgoService(@RequestParam Long algoId,@RequestParam String name){
 
         Algo algo = algoRepository.findById(algoId);
         AlgoService algoService = new AlgoService();
@@ -50,7 +50,7 @@ public class AlgoServiceController {
             String repo = algo.getRepo();
             String tag = algo.getName();
             algoService.setAlgo(algo);
-            String serviceId = algoServiceManager.createService(repo + ":" + tag, name, appKey);
+            String serviceId = algoServiceManager.createService(repo + ":" + tag, name);
             algoService.setServiceId(serviceId);
             algoService.setName(name);
             algoService.setStatus("CREATED");

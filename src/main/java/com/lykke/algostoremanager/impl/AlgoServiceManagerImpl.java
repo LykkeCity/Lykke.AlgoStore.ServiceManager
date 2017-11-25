@@ -76,7 +76,7 @@ public class AlgoServiceManagerImpl implements AlgoServiceManager {
     }
 
     @Override
-    public String createService(String algoId, String name, String appKey) {
+    public String createService(String algoId, String name) {
 
         ServiceSpec serviceSpec = new ServiceSpec();
         Map<String,String> labels = new HashMap<String,String>();

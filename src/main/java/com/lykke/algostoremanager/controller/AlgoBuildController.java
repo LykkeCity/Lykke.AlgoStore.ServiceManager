@@ -79,6 +79,7 @@ public class AlgoBuildController {
 
     }
 
+    @Transactional
     @RequestMapping(value="/upload-java-binary", method=RequestMethod.POST)
     public Algo buildAlgoImageFromBinary(@RequestParam String algoUserName,@RequestParam String algoName,
                              @RequestPart(required = true) MultipartFile file){

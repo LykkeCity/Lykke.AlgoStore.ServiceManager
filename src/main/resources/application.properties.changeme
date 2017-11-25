@@ -1,6 +1,7 @@
-server.port=8443
+server.port=8080
+server.ssl.enabled=false
 server.ssl.key-store=keystore.jks
-server.ssl.key-store-password=kuchogon
+server.ssl.key-store-password=<YOUR KEYSTORE FILE PASSWORD>
 server.ssl.key-password=kuchogon
 spring.http.multipart.max-file-size=128MB
 spring.http.multipart.max-request-size=128MB
@@ -11,3 +12,36 @@ info.build.timestamp=@maven.build.timestamp@
 info.revision.commit.id=@git.commit.id@
 info.revision.commit.message.short=@git.commit.message.short@
 info.revision.commit.time=@git.commit.time@
+# H2
+
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2
+
+# Datasource
+
+#spring.datasource.url=jdbc:h2:mem:TEST;MVCC=true;DB_CLOSE_DELAY=-1;MODE=Oracle
+#spring.datasource.username=sa
+#spring.datasource.password=
+#spring.datasource.driver-class-name=org.h2.Driver
+#spring.datasource.platform=h2
+
+
+spring.datasource.url=jdbc:postgresql://<YOUR_DB_ADDRESS>:<YOUR_DB_PORT>/<YOUR DB NAME>
+spring.datasource.username=<YOUR USER>
+spring.datasource.password=<YOUR PASS>
+spring.datasource.platform=POSTGRESQL
+
+spring.datasource.initialize=true
+#datasource.schema=
+#datasource.data
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+logging.level.org.springframework=ERROR
+logging.level.com.lykke.algostoremanager=DEBUG
+logging.pattern.console= "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+# Logging pattern for file
+logging.pattern.file= "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+logging.file=./algostoremanager.log

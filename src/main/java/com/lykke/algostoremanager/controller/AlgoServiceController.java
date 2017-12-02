@@ -5,7 +5,6 @@ import com.lykke.algostoremanager.exception.AlgoException;
 import com.lykke.algostoremanager.exception.AlgoServiceManagerErrorCode;
 import com.lykke.algostoremanager.model.Algo;
 import com.lykke.algostoremanager.model.AlgoService;
-import com.lykke.algostoremanager.model.AlgoServiceStatus;
 import com.lykke.algostoremanager.repo.AlgoRepository;
 import com.lykke.algostoremanager.repo.AlgoServiceRepository;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class AlgoServiceController {
     @Autowired
     AlgoServiceRepository algoServiceRepository;
 
-    @RequestMapping(value = "/create", method= RequestMethod.PUT)
+    @RequestMapping(value = "/create", method= RequestMethod.PUT,produces = { "application/json" })
 
     public AlgoService createAlgoService(@RequestParam Long algoId,@RequestParam String name){
 
@@ -48,9 +47,13 @@ public class AlgoServiceController {
         if (algo!=null) {
 
             String repo = algo.getRepo();
-            String tag = algo.getName();
+            String algoName = algo.getName();
+            Long algoVersion = algo.getVersion();
+            String algoUser = algo.getAlgoUser().getUserName();
+
+            String tag = algo.getRepo()+":"+algoUser+"-"+algo.getName()+"-"+algo.getVersion();
             algoService.setAlgo(algo);
-            String serviceId = algoServiceManager.createService(repo + ":" + tag, name);
+            String serviceId = algoServiceManager.createService(tag, name);
             algoService.setServiceId(serviceId);
             algoService.setName(name);
             algoService.setStatus("CREATED");
@@ -62,7 +65,7 @@ public class AlgoServiceController {
         return algoService;
     }
 
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE,produces = { "application/json" })
 
     public void deleteAlgoService(@PathVariable Long id){
 
@@ -71,7 +74,7 @@ public class AlgoServiceController {
             String serviceId = algoService.getServiceId();
 
             algoServiceManager.deleteService(serviceId);
-            algoService.setStatus(AlgoServiceStatus.REMOVED.toString());
+            algoServiceRepository.delete(algoService);
 
         }else {
             throw new AlgoException("AlgoService not found!!!", AlgoServiceManagerErrorCode.ALGO_SERVICE_NOT_FOUND);
@@ -79,7 +82,7 @@ public class AlgoServiceController {
 
     }
 
-    @RequestMapping(value = "/{id}/status", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/status", method= RequestMethod.GET,produces = { "application/json" })
 
 
     public String getAlgoServiceStatus(@PathVariable Long id){
@@ -90,7 +93,7 @@ public class AlgoServiceController {
     }
 
 
-    @RequestMapping(value = "/{id}/update", method= RequestMethod.POST)
+    @RequestMapping(value = "/{id}/update", method= RequestMethod.POST,produces = { "application/json" })
     //TODO does not work due to
     //https://github.com/docker-java/docker-java/pull/917
 
@@ -112,7 +115,7 @@ public class AlgoServiceController {
     }
 
 
-    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET,produces = { "application/json" })
 
     public AlgoService get(@PathVariable Long id){
 
@@ -125,7 +128,7 @@ public class AlgoServiceController {
 
     }
 
-    @RequestMapping(value = "/get", method= RequestMethod.GET)
+    @RequestMapping(value = "/get", method= RequestMethod.GET,produces = { "application/json" })
 
     public List<AlgoService> get(){
 

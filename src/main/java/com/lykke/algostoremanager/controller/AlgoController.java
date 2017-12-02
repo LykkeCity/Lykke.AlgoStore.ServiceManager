@@ -54,7 +54,7 @@ public class AlgoController {
 
 
 
-    @RequestMapping(value = "/get", method= RequestMethod.GET)
+    @RequestMapping(value = "/get", method= RequestMethod.GET,produces = { "application/json" })
 
     public List<Algo> getAlgo(){
         List<Algo> algos = (List<Algo>) algoRepository.findAll();
@@ -68,7 +68,7 @@ public class AlgoController {
     }
 
 
-    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET,produces = { "application/json" })
 
     public Algo getAlgo(@PathVariable Long id){
         Algo algo = algoRepository.findById(id);
@@ -80,7 +80,7 @@ public class AlgoController {
 
         }
     }
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE,produces = { "application/json" })
 
     public void removeALgo(@PathVariable Long id){
         Algo algo = algoRepository.findById(id);

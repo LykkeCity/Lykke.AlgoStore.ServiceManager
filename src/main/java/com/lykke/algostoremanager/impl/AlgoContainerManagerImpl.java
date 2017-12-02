@@ -88,6 +88,53 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
 
     }
 
+
+    @Override
+    public String getLog(String id,int tail) {
+        LogContainerResultCallback loggingCallback = new LogContainerResultCallback(){
+            protected final StringBuffer log = new StringBuffer();
+
+            List<Frame> collectedFrames = new ArrayList<Frame>();
+
+            boolean collectFrames = false;
+
+            @Override
+            public void onNext(Frame frame) {
+                if (collectFrames) collectedFrames.add(frame);
+                log.append(new String(frame.getPayload()));
+            }
+
+            @Override
+            public String toString() {
+                return log.toString();
+            }
+
+
+            public List<Frame> getCollectedFrames() {
+                return collectedFrames;
+            }
+
+        };
+
+        // this essentially test the since=0 case
+        dockerClient.logContainerCmd(id)
+                .withStdErr(true)
+                .withStdOut(true)
+                .withFollowStream(true)
+                .withTail(tail)
+                .exec(loggingCallback);
+
+        try {
+            loggingCallback.awaitCompletion(3, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        return loggingCallback.toString();
+
+    }
+
     @Override
     public void stop(String id) {
 

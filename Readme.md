@@ -73,6 +73,7 @@ mvn spring-boot:run
 # Build a docker image 
 ```
 docker build --tag lykke/algoservicemanager:1.0 .
+docker push lykke/algoservicemanager:1.0
 docker run -dP 8443:8443 --name AlgoServiceManager lykke/algoservicemanager:1.0
 ```
 # Deploy as a service 

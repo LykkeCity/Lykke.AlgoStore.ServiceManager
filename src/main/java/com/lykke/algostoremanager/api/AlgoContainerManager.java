@@ -6,6 +6,7 @@ package com.lykke.algostoremanager.api;
 public interface AlgoContainerManager {
     String create(String imageId,String name);
     String getLog(String id);
+    String getLog(String id,int tail);
     void stop(String id);
     void start(String id);
     void pause(String id);

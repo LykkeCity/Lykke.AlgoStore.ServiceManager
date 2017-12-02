@@ -29,6 +29,7 @@ public class Algo {
     private String repo;
 
     @Version
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long version;
 
 

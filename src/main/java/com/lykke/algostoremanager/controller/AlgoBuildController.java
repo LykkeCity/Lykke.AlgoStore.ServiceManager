@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,9 +40,11 @@ public class AlgoBuildController {
     AlgoRepository algoRepository;
 
 
+    private @Value("${docker.repo}") String dockerRepo;
 
 
-    @RequestMapping(value = "/upload-java-source", method= RequestMethod.POST, consumes = "text/plain")
+
+    @RequestMapping(value = "/upload-java-source", method= RequestMethod.POST, consumes = "text/plain",produces = { "application/json" })
 
 
 
@@ -57,13 +60,12 @@ public class AlgoBuildController {
         copySourceAlgoFile(baseDirectory, "Main.java", appCode);
         String imageId = dockerImageManager.build(baseDirectory, dockerFile);
 
-        String repo = "niau/algos";
         AlgoUser algoUser = algoUserRepository.findByUserName(algoUserName);
         if (algoUser==null){
             algoUser = createNewAlgoUser(algoUserName);
         }
 
-        Algo algo = new Algo(imageId, algoName,repo,algoUser);
+        Algo algo = new Algo(imageId, algoName,dockerRepo,algoUser);
 
         algoRepository.save(algo);
 
@@ -71,8 +73,8 @@ public class AlgoBuildController {
 
         String tag = generateAlgoTag(algoUserName, algoName,algoVersion);
 
-        dockerImageManager.tag(imageId, repo, tag);
-        dockerImageManager.push(imageId, repo, tag);
+        dockerImageManager.tag(imageId, dockerRepo, tag);
+        dockerImageManager.push(imageId, dockerRepo, tag);
 
 
         return  algo;
@@ -80,9 +82,8 @@ public class AlgoBuildController {
     }
 
     @Transactional
-    @RequestMapping(value="/upload-java-binary", method=RequestMethod.POST)
-    public Algo buildAlgoImageFromBinary(@RequestParam String algoUserName,@RequestParam String algoName,
-                             @RequestPart(required = true) MultipartFile file){
+    @RequestMapping(value="/upload-java-binary", method=RequestMethod.POST,produces = { "application/json" })
+    public Algo buildAlgoImageFromBinary(@RequestPart(required = true) MultipartFile file,@RequestParam String algoUserName,@RequestParam String algoName){
 
         String algoUserDirName = algoUserName+"-"+algoName;
         File baseDirectory = new File("/tmp"+File.separator+algoUserDirName);

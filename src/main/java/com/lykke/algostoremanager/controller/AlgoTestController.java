@@ -40,7 +40,9 @@ public class AlgoTestController {
     AlgoTestRepository algoTestRepository;
 
 
-    @RequestMapping(value = "/get", method= RequestMethod.GET)
+
+
+    @RequestMapping(value = "/get", method= RequestMethod.GET,produces = { "application/json" })
 
     public List<AlgoTest> getAll(){
 
@@ -50,7 +52,7 @@ public class AlgoTestController {
         return algoTestList;
     }
 
-    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/get", method= RequestMethod.GET,produces = { "application/json" })
 
     public AlgoTest get(@PathVariable Long id){
 
@@ -62,7 +64,7 @@ public class AlgoTestController {
 
 
 
-    @RequestMapping(value = "/create", method= RequestMethod.PUT)
+    @RequestMapping(value = "/create", method= RequestMethod.PUT,produces = { "application/json" })
 
     public AlgoTest testAlgo(@RequestParam Long algoId,@RequestParam String name){
         Algo algo = algoRepository.findById(algoId);
@@ -85,7 +87,7 @@ public class AlgoTestController {
     }
 
 
-    @RequestMapping(value = "/{id}/start", method= RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/start", method= RequestMethod.PUT,produces = { "application/json" })
 
     public void start(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
@@ -104,7 +106,7 @@ public class AlgoTestController {
 
     }
 
-    @RequestMapping(value = "/{id}/pause", method= RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/pause", method= RequestMethod.PUT,produces = { "application/json" })
 
     public void pauseTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
@@ -122,7 +124,7 @@ public class AlgoTestController {
 
     }
 
-    @RequestMapping(value = "/{id}/resume", method= RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/resume", method= RequestMethod.PUT,produces = { "application/json" })
 
     public void resumeTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
@@ -141,7 +143,7 @@ public class AlgoTestController {
 
     }
 
-    @RequestMapping(value = "/{id}/stop", method= RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/stop", method= RequestMethod.PUT,produces = { "application/json" })
 
     public void stopTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
@@ -159,7 +161,7 @@ public class AlgoTestController {
 
     }
 
-    @RequestMapping(value = "/{id}/getLog", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/getLog", method= RequestMethod.GET,produces = { "application/json" })
 
     public String getAlgoLog(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
@@ -172,7 +174,20 @@ public class AlgoTestController {
         }
     }
 
-    @RequestMapping(value = "/{id}/status", method= RequestMethod.GET)
+    @RequestMapping(value = "/{id}/getTailLog", method= RequestMethod.GET,produces = { "application/json" })
+
+    public String getTailLog(@PathVariable Long id,@RequestParam int tail){
+        AlgoTest algotTest = algoTestRepository.findById(id);
+
+        if (algotTest!=null) {
+            return algoContainerManager.getLog(algotTest.getContainerId(),tail);
+        } else {
+            throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_ERROR);
+
+        }
+    }
+
+    @RequestMapping(value = "/{id}/status", method= RequestMethod.GET,produces = { "application/json" })
 
     public String getTestAlgoStatus(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
@@ -185,14 +200,14 @@ public class AlgoTestController {
         }
     }
 
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE,produces = { "application/json" })
 
     public void deleteTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
              algoContainerManager.delete(algotTest.getContainerId());
-             algoTestRepository.delete(id);
+             algoTestRepository.delete(algotTest);
         }else {
             throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_ERROR);
 

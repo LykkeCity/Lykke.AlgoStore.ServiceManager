@@ -36,7 +36,7 @@ public class AlgoServiceController {
     @Autowired
     AlgoServiceRepository algoServiceRepository;
 
-    @RequestMapping(value = "/create", method= RequestMethod.PUT,produces = { "application/json" })
+    @RequestMapping(value = "/create", method= RequestMethod.POST,produces = { "application/json" })
 
     public AlgoService createAlgoService(@RequestParam Long algoId,@RequestParam String name){
 
@@ -65,7 +65,7 @@ public class AlgoServiceController {
         return algoService;
     }
 
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE,produces = { "application/json" })
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
 
     public void deleteAlgoService(@PathVariable Long id){
 
@@ -93,7 +93,7 @@ public class AlgoServiceController {
     }
 
 
-    @RequestMapping(value = "/{id}/update", method= RequestMethod.POST,produces = { "application/json" })
+    @RequestMapping(value = "/{id}/update", method= RequestMethod.POST)
     //TODO does not work due to
     //https://github.com/docker-java/docker-java/pull/917
 

@@ -31,16 +31,16 @@ server.ssl.key-password=your SSL certificate key pass
 
 #Create postgresql database 
 ```
-createdb -h localhost -p 5432 -U postgres algostoremanager
+createdb -h localhost -p 5432 -U postgres algostore
 CREATE ROLE algostore LOGIN PASSWORD 'my_password';
-GRANT ALL PRIVILEGES ON database algostoremanager TO algostore;
+GRANT ALL PRIVILEGES ON database algostore TO algostore;
 ```
 
 #Update your application properties with:
 ```
 spring.datasource.url=jdbc:postgresql://localhost:5432/algostoremanager
 spring.datasource.username=algostore
-spring.datasource.password=algopass321!
+spring.datasource.password=my_password
 spring.datasource.platform=POSTGRESQL
 
 spring.datasource.initialize=true

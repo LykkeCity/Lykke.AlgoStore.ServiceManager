@@ -103,7 +103,7 @@ public class AlgoController {
            algoRepository.delete(algo);
 
         } else {
-            throw new AlgoException("Algo not found!!!", AlgoServiceManagerErrorCode.ALGO_TEST_ERROR);
+            throw new AlgoException("Algo not found!!!", AlgoServiceManagerErrorCode.ALGO_NOT_FOUND);
 
         }
     }

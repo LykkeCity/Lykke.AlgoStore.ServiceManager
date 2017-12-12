@@ -1,6 +1,5 @@
 package com.lykke.algostoremanager;
 
-import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -11,13 +10,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig {                                    
+public class SwaggerConfig {
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).enableUrlTemplating(true)
-          .select()                                  
-          .apis(RequestHandlerSelectors.any())
-          .paths(Predicates.not(PathSelectors.regex("/error")))
-          .build();
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
     }
 }

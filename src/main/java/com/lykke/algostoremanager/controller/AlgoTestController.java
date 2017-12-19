@@ -1,11 +1,15 @@
 package com.lykke.algostoremanager.controller;
 
 import com.lykke.algostoremanager.api.AlgoContainerManager;
+import com.lykke.algostoremanager.dto.AdminStatusResponse;
+import com.lykke.algostoremanager.dto.LogResponse;
+import com.lykke.algostoremanager.dto.OperationalStatusResponse;
 import com.lykke.algostoremanager.exception.AlgoException;
 import com.lykke.algostoremanager.exception.AlgoServiceManagerErrorCode;
 import com.lykke.algostoremanager.model.Algo;
 import com.lykke.algostoremanager.model.AlgoTest;
 import com.lykke.algostoremanager.model.AlgoTestStatus;
+import com.lykke.algostoremanager.model.ContainerStatus;
 import com.lykke.algostoremanager.repo.AlgoRepository;
 import com.lykke.algostoremanager.repo.AlgoTestRepository;
 import org.slf4j.Logger;
@@ -149,16 +153,23 @@ public class AlgoTestController {
 
     }
 
-    @RequestMapping(value = "/{id}/stop", method= RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/stop", method= RequestMethod.PUT,produces={"application/json"})
 
     public void stopTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
 
-            algoContainerManager.stop(algotTest.getContainerId());
-            algotTest.setStatus(AlgoTestStatus.STOPPED.toString());
-            algoTestRepository.save(algotTest);
+            String adminStatus = algotTest.getStatus();
+            String operationalStatus =  algoContainerManager.getStatus(algotTest.getContainerId());
+
+            if (operationalStatus.equals(ContainerStatus.status_running.toString())|| operationalStatus.toLowerCase().contains(ContainerStatus.status_up.toString()) || operationalStatus.toLowerCase().contains(ContainerStatus.status_paused.toString())) {
+                algoContainerManager.stop(algotTest.getContainerId());
+                algotTest.setStatus(AlgoTestStatus.STOPPED.toString());
+                algoTestRepository.save(algotTest);
+            }else {
+                new AlgoException("Can't stop algotest in status "+ adminStatus+" !!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
+            }
 
         } else {
             throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
@@ -167,60 +178,68 @@ public class AlgoTestController {
 
     }
 
-    @RequestMapping(value = "/{id}/getLog", method= RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/{id}/getLog", method= RequestMethod.GET,produces={"application/json"})
 
     @ResponseBody
-    public String getAlgoLog(@PathVariable Long id){
+    public LogResponse getAlgoLog(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
-            return algoContainerManager.getLog(algotTest.getContainerId());
+            LogResponse logResponse = new LogResponse(algoContainerManager.getLog(algotTest.getContainerId(),1000));
+            return logResponse;
         } else {
             throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
 
         }
     }
 
-    @RequestMapping(value = "/{id}/getTailLog", method= RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/{id}/getTailLog", method= RequestMethod.GET,produces={"application/json"})
 
-    public String getTailLog(@PathVariable Long id,@RequestParam int tail){
+    public LogResponse getTailLog(@PathVariable Long id,@RequestParam int tail){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
-            return algoContainerManager.getLog(algotTest.getContainerId(),tail);
+            LogResponse logResponse = new LogResponse(algoContainerManager.getLog(algotTest.getContainerId(),tail));
+            return logResponse;
         } else {
             throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
 
         }
     }
 
-    @RequestMapping(value = "/{id}/getAdministrativeStatus", method= RequestMethod.GET,produces = "text/plain;charset=UTF-8")
+    @RequestMapping(value = "/{id}/getAdministrativeStatus", method= RequestMethod.GET,produces={"application/json"})
 
-    public String getAdministrativeStatus(@PathVariable Long id){
+    public AdminStatusResponse getAdministrativeStatus(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
         if (algotTest!=null) {
-            return algotTest.getStatus();
+            AdminStatusResponse adminStatusResponse = new AdminStatusResponse(algotTest.getStatus());
+            return adminStatusResponse;
+
         }else {
             throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
 
         }
     }
 
-    @RequestMapping(value = "/{id}/getOperationalStatus", method= RequestMethod.GET,produces = "text/plain;charset=UTF-8")
 
-    public String getOperationalStatus(@PathVariable Long id){
+    @RequestMapping(value = "/{id}/getOperationalStatus", method= RequestMethod.GET, produces={"application/json"})
+
+    public OperationalStatusResponse getOperationalStatus(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
+
         if (algotTest!=null) {
-            return algoContainerManager.getStatus(algotTest.getContainerId());
+            OperationalStatusResponse operationalStatusResponse = new OperationalStatusResponse(algoContainerManager.getStatus(algotTest.getContainerId()));
+
+            return operationalStatusResponse;
         }else {
             throw new AlgoException("AlgoTest not found!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
 
         }
     }
 
-    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}/delete", method= RequestMethod.DELETE,produces={"application/json"})
 
     public void deleteTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);

@@ -45,7 +45,6 @@ public class Algo {
 
 
 
-
     public Algo() {}
 
     public Algo(String algoBuildImageId, String name, String repo, AlgoUser algoUser) {

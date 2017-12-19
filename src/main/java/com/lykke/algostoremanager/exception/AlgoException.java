@@ -28,6 +28,8 @@ public class AlgoException extends RuntimeException {
         this.algoErrorCode = errorCode;
     }
 
+
+
     public AlgoErrorCode getErrorCode() {
         return algoErrorCode;
     }

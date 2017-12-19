@@ -8,10 +8,13 @@ import com.lykke.algostoremanager.exception.AlgoServiceManagerErrorCode;
 import com.lykke.algostoremanager.model.Algo;
 import com.lykke.algostoremanager.model.AlgoService;
 import com.lykke.algostoremanager.model.AlgoTest;
+import com.lykke.algostoremanager.model.ContainerStatus;
 import com.lykke.algostoremanager.repo.AlgoRepository;
 import com.lykke.algostoremanager.repo.AlgoServiceRepository;
 import com.lykke.algostoremanager.repo.AlgoTestRepository;
 import com.lykke.algostoremanager.repo.AlgoUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +32,8 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 
 public class AlgoController {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     @Autowired
     AlgoServiceManager algoServiceManager;
@@ -96,9 +101,20 @@ public class AlgoController {
 
            AlgoTest algoTest = algo.getAlgoTest();
            if (algoTest!=null){
-              algoContainerManager.delete(algoTest.getContainerId());
-              algoTestRepository.delete(algoTest);
+
+               String operStatus = algoContainerManager.getStatus(algoTest.getContainerId());
+               if (operStatus.equals(ContainerStatus.status_running.toString()) || operStatus.equals(ContainerStatus.status_paused.toString())){
+                   algoContainerManager.stop(algoTest.getContainerId());
+               }
+
+               if (!operStatus.equals(ContainerStatus.status_removing.toString())) {
+                   algoContainerManager.delete(algoTest.getContainerId());
+               }
+
+               algoTestRepository.delete(algoTest);
+
            }
+
            algoImageManager.remove(algo.getAlgoBuildImageId());
            algoRepository.delete(algo);
 

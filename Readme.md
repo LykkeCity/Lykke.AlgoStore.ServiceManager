@@ -62,7 +62,7 @@ For production use
 spring.jpa.hibernate.ddl-auto=validate
 ```
  
- 
+
 
 # Run
 You can run your code through the maven spring boot plugin

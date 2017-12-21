@@ -158,17 +158,20 @@ public class AlgoTestController {
     public void stopTestAlgo(@PathVariable Long id){
         AlgoTest algotTest = algoTestRepository.findById(id);
 
+
         if (algotTest!=null) {
 
-            String adminStatus = algotTest.getStatus();
             String operationalStatus =  algoContainerManager.getStatus(algotTest.getContainerId());
+            logger.debug("Stopping a container with id :"+ algotTest.getContainerId()+" and operational status "+operationalStatus +"!!!");
+            if (operationalStatus.toUpperCase().equals(ContainerStatus.status_running.toString())||
+                    operationalStatus.toUpperCase().contains(ContainerStatus.status_up.toString()) ||
+                    operationalStatus.toUpperCase().contains(ContainerStatus.status_paused.toString())) {
 
-            if (operationalStatus.equals(ContainerStatus.status_running.toString())|| operationalStatus.toLowerCase().contains(ContainerStatus.status_up.toString()) || operationalStatus.toLowerCase().contains(ContainerStatus.status_paused.toString())) {
                 algoContainerManager.stop(algotTest.getContainerId());
                 algotTest.setStatus(AlgoTestStatus.STOPPED.toString());
                 algoTestRepository.save(algotTest);
             }else {
-                new AlgoException("Can't stop algotest in status "+ adminStatus+" !!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
+                new AlgoException("Can't stop algotest with id "+ algotTest.getContainerId()+" !!!!",AlgoServiceManagerErrorCode.ALGO_TEST_NOT_FOUND);
             }
 
         } else {

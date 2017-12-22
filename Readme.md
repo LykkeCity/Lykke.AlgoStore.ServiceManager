@@ -29,6 +29,41 @@ server.ssl.key-store-password=yourKeyStorePass
 server.ssl.key-password=your SSL certificate key pass
 ```
 
+#Create postgresql database 
+```
+createdb -h localhost -p 5432 -U postgres algostore
+CREATE ROLE algostore LOGIN PASSWORD 'my_password';
+GRANT ALL PRIVILEGES ON database algostore TO algostore;
+```
+
+#Update your application properties with:
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/algostoremanager
+spring.datasource.username=algostore
+spring.datasource.password=my_password
+spring.datasource.platform=POSTGRESQL
+
+spring.datasource.initialize=true
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+```
+
+Note that initially to create the database schema you should set
+```
+spring.jpa.hibernate.ddl-auto=create
+```
+If you wish to update the schema do:
+```
+spring.jpa.hibernate.ddl-auto=update
+```
+For production use
+```
+spring.jpa.hibernate.ddl-auto=validate
+```
+ 
+
+
 # Run
 You can run your code through the maven spring boot plugin
 ```
@@ -38,6 +73,7 @@ mvn spring-boot:run
 # Build a docker image 
 ```
 docker build --tag lykke/algoservicemanager:1.0 .
+docker push lykke/algoservicemanager:1.0
 docker run -dP 8443:8443 --name AlgoServiceManager lykke/algoservicemanager:1.0
 ```
 # Deploy as a service 

@@ -1,6 +1,7 @@
-server.port=8443
+server.port=8080
+server.ssl.enabled=false
 server.ssl.key-store=keystore.jks
-server.ssl.key-store-password=kuchogon
+server.ssl.key-store-password=<YOUR KEYSTORE FILE PASSWORD>
 server.ssl.key-password=kuchogon
 spring.http.multipart.max-file-size=128MB
 spring.http.multipart.max-request-size=128MB
@@ -25,9 +26,9 @@ spring.h2.console.path=/h2
 #spring.datasource.platform=h2
 
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/algostoremanager
-spring.datasource.username=algostore
-spring.datasource.password=algopass321!
+spring.datasource.url=jdbc:postgresql://<YOUR_DB_ADDRESS>:<YOUR_DB_PORT>/<YOUR DB NAME>
+spring.datasource.username=<YOUR USER>
+spring.datasource.password=<YOUR PASS>
 spring.datasource.platform=POSTGRESQL
 
 spring.datasource.initialize=true

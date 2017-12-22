@@ -21,9 +21,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 public class AlgoManager {
 
+
 	public static void main(String[] args) {
 
+		System.out.println("S");
 		SpringApplication.run(AlgoManager.class, args);
+
 
 	}
 

@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by niau on 10/23/17.
@@ -88,17 +88,21 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
         };
 
         // this essentially test the since=0 case
-        dockerClient.logContainerCmd(id)
-                .withStdErr(true)
-                .withStdOut(true)
-                .withFollowStream(true)
-                .withTailAll()
-                .exec(loggingCallback);
-
         try {
-            loggingCallback.awaitCompletion(3, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            dockerClient.logContainerCmd(id)
+                    .withStdErr(true)
+                    .withStdOut(true)
+                    .withTailAll()
+                    .exec(loggingCallback).awaitCompletion();
+        }catch (InterruptedException e) {
+            logger.error("Logger callback interrupted", e);
+            try {
+                loggingCallback.close();
+            } catch (IOException e1) {
+                logger.error("Unable to close logging callback", e1);
+                throw  new AlgoException("Unable to get AlgoTest log file",AlgoServiceManagerErrorCode.ALGO_TEST_ERROR);
+            }
+
         }
 
 
@@ -127,6 +131,11 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
                 return log.toString();
             }
 
+            @Override
+            public void onComplete() {
+                super.onComplete();
+                System.out.println("completed!");
+            }
 
             public List<Frame> getCollectedFrames() {
                 return collectedFrames;
@@ -134,19 +143,23 @@ public class AlgoContainerManagerImpl implements AlgoContainerManager {
 
         };
 
-        // this essentially test the since=0 case
-        dockerClient.logContainerCmd(id)
-                .withStdErr(true)
-                .withStdOut(true)
-                .withFollowStream(true)
-                .withTail(tail)
-                .exec(loggingCallback);
-
         try {
-            loggingCallback.awaitCompletion(3, TimeUnit.SECONDS);
+            dockerClient.logContainerCmd(id)
+                    .withStdErr(true)
+                    .withStdOut(true)
+                    .withTail(tail)
+                    .exec(loggingCallback).awaitCompletion();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Logger callback interrupted", e);
+            try {
+                loggingCallback.close();
+            } catch (IOException e1) {
+                logger.error("Unable to close logging callback", e1);
+                throw  new AlgoException("Unable to get AlgoTest log file",AlgoServiceManagerErrorCode.ALGO_TEST_ERROR);
+            }
+
         }
+
 
 
         return loggingCallback.toString();
